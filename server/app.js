@@ -1,13 +1,31 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const Promise = require('bluebird');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// Routers
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
+
+// Set up environment variables
+const dotenv = require('dotenv');
+dotenv.config();
+
+// Set up mongoose connection
+const mongoose = require('mongoose');
+
+const mongoDB = process.env.MONGO_URL || "mongodb://mongo:27017";
+mongoose.connect(mongoDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+mongoose.Promise = Promise;
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error."));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,6 +37,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Use routers
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
