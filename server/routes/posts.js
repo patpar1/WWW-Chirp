@@ -14,8 +14,7 @@ router.get('/', function(req, res, next) {
       if (err) {
         return next(err);
       }
-      res.render('posts', {
-        title: 'Post List',
+      res.send({
         post_list: post_array
       })
   });
