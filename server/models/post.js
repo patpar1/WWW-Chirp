@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var PostSchema = new Schema({
+const PostSchema = new Schema({
     user: {
         type: String,
         required: true
@@ -10,7 +10,10 @@ var PostSchema = new Schema({
     content: {
         type: String,
         required: true
-    }
+    },
+    likes: Array,
+    replies: Array,
+    replyingTo: String
 }, {
     timestamps: true
 });

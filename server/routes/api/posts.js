@@ -2,7 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const router = express.Router();
 
-const Post = require('../models/post');
+const Post = require('../../models/Post');
 
 /* GET posts listing. */
 router.get('/', function(req, res, next) {
@@ -14,9 +14,7 @@ router.get('/', function(req, res, next) {
       if (err) {
         return next(err);
       }
-      res.send({
-        post_list: post_array
-      })
+      res.send(post_array);
   });
 });
 
