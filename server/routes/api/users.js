@@ -5,22 +5,22 @@ const auth = require('../auth');
 const User = require('../../models/User');
 
 // POST request to register a new user
-router.post('/', auth.optional, (req, res, next) => {
+router.post('/', auth.optional, (req, res) => {
 
-    const { body: { user } } = req;
-
-    if (!user.username) {
-        res.status(422);
-        next(res);
+    if(!req.body.user.userName) {
+        return res.status(422).json({
+            errors: { email: 'is required' }
+        });
     }
 
-    if (!user.password) {
-        res.status(422);
-        next(res);
+    if(!req.body.user.password) {
+        return res.status(422).json({
+            errors: { password: 'is required' }
+        });
     }
 
-    const newUser = new User(user);
-    newUser.setPassword(user.password);
+    const newUser = new User(req.body.user);
+    newUser.setPassword(req.body.user.password);
 
     return newUser.save()
         .then(() => res.json({
@@ -31,16 +31,16 @@ router.post('/', auth.optional, (req, res, next) => {
 // POST request to login a user
 router.post('/login', auth.optional, (req, res, next) => {
 
-    const { body: { user } } = req;
-
-    if (!user.username) {
-        res.status(422);
-        next(res);
+    if(!req.body.user.userName) {
+        return res.status(422).json({
+            errors: { email: 'is required' }
+        });
     }
 
-    if (!user.password) {
-        res.status(422);
-        next(res);
+    if(!req.body.user.password) {
+        return res.status(422).json({
+            errors: { password: 'is required' }
+        });
     }
 
     return passport.authenticate(
@@ -63,19 +63,14 @@ router.post('/login', auth.optional, (req, res, next) => {
 });
 
 // GET request to authenticate a user action
-router.get('/current', auth.required, (req, res, next) => {
-
-    const { payload: { id } } = req;
-
-    return User.findById(id)
-        .then(user => {
-            if (!user) {
+router.get('/current', auth.required, (req, res) => {
+    return User.findById(req.payload.id)
+        .then((user) => {
+            if(!user) {
                 return res.sendStatus(400);
             }
 
-            return res.json({
-                user: currUser.toAuthJSON()
-            });
+            return res.json({ user: user.toAuthJSON() });
         });
 });
 

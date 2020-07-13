@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-    user: {
+    userName: {
         type: String,
         required: true
     },
@@ -13,7 +13,10 @@ const PostSchema = new Schema({
     },
     likes: Array,
     replies: Array,
-    replyingTo: String
+    replyingTo: {
+        type: String,
+        default: null
+    }
 }, {
     timestamps: true
 });

@@ -27,7 +27,8 @@ const { env } = require('process');
 const mongoDB = process.env.MONGO_URL || "mongodb://mongo:27017";
 mongoose.connect(mongoDB, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 });
 mongoose.Promise = Promise;
 const db = mongoose.connection;
