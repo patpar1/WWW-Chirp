@@ -86,13 +86,14 @@ router.post(
         if (!model) {
           return res.status(422).json({ errors: { parent_model: 'not found!' }})
         };
-    }).then(
-      reply.save((err, result) => {
-        if (err) { return next(err); }
-        if (res.statusCode === 200) {
+    }).then(() => {
+      if (res.statusCode === 200) {
+        reply.save((err, result) => {
+          if (err) { return next(err); }
           res.send(result);
-        }
-      }));
+        })
+      }
+    });
   }
 )
 
