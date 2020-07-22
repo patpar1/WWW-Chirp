@@ -1,17 +1,22 @@
-import { FETCH_POSTS, CREATE_POST } from './types';
+import { ADD_NEW_POST, FETCHING_POSTS, POSTS_FETCHED, FETCH_ERROR } from './types'
 
 export const fetchPosts = () => dispatch => {
-  fetch('http://localhost:3000/posts')
+  dispatch({
+    type: FETCHING_POSTS
+  })
+  fetch("http://localhost:3000/posts")
     .then(res => res.json())
-    .then(posts =>
-      dispatch({
-        type: FETCH_POSTS,
-        payload: posts
-      })
-    );
-};
+    .then(data => dispatch({
+      type: POSTS_FETCHED,
+      payload: data
+    }))
+    .catch(error => dispatch({
+      type: FETCH_ERROR,
+      payload: error
+    }))
+}
 
-export const createPost = postData => dispatch => {
+export const addNewPost = postData => dispatch => {
   fetch('http://localhost:3000/posts/create', {
     method: 'POST',
     headers: {
@@ -22,8 +27,11 @@ export const createPost = postData => dispatch => {
     .then(res => res.json())
     .then(post =>
       dispatch({
-        type: CREATE_POST,
+        type: ADD_NEW_POST,
         payload: post
       })
-    );
-};
+    ).catch(error => dispatch({
+      type: FETCH_ERROR,
+      payload: error
+    }))
+}

@@ -1,18 +1,33 @@
-import React from 'react';
-import NavBar from './NavBar';
-import CreatePost from './CreatePost';
-import PostContainer from './PostContainer';
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+} from 'react-router-dom'
+
+import { NavBar } from './NavBar'
+import { PostList } from './PostList'
+import { CreatePost } from './CreatePost'
 
 function App() {
-  return (
-    <div className="App">
-      <NavBar />
-      <div className="container">
-        <CreatePost />
-        <PostContainer />
-      </div>
-    </div>
-  );
+    return (
+        <Router>
+            <NavBar />
+            <div className="App">
+                <Switch>
+                    <Route
+                        exact path="/"
+                        render={() => (
+                            <React.Fragment>
+                                <CreatePost />
+                                <PostList />
+                            </React.Fragment>
+                        )}
+                    />
+                </Switch>
+            </div>
+        </Router>
+    )
 }
 
-export default App;
+export default App

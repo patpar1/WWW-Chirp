@@ -1,22 +1,35 @@
-import { FETCH_POSTS, CREATE_POST } from '../actions/types';
+import { ADD_NEW_POST, FETCHING_POSTS, POSTS_FETCHED, FETCH_ERROR } from '../actions/types';
 
 const initialState = {
-  items: [],
-  item: {}
-};
+  posts: [],
+  status: 'idle',
+  error: null
+}
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case FETCH_POSTS:
+    case FETCHING_POSTS:
       return {
         ...state,
-        items: action.payload
-      };
-    case CREATE_POST:
+        status: 'loading'
+      }
+    case POSTS_FETCHED:
       return {
         ...state,
-        item: action.payload
-      };
+        status: 'succeeded',
+        posts: [...state.posts, ...action.payload]
+      }
+    case FETCH_ERROR:
+      return {
+        ...state,
+        status: 'error',
+        error: action.payload
+      }
+    case ADD_NEW_POST:
+      return {
+        ...state,
+        posts: [...state.posts, action.payload]
+      }
     default:
       return state;
   }
