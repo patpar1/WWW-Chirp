@@ -9,11 +9,11 @@ import { NavBar } from './NavBar'
 import { PostList } from './PostList'
 import { CreatePost } from './CreatePost'
 
-function App() {
+const App = () => {
     return (
         <Router>
             <NavBar />
-            <div className="App">
+            <div className="container">
                 <Switch>
                     <Route
                         exact path="/"

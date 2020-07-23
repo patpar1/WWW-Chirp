@@ -13,30 +13,20 @@ router.get('/', function(req, res, next) {
 
 /* POST request for creating a new post. */
 router.post('/create', function(req, res, next) {
-    if (!req.body.userName || !req.body.content) {
+    if (!req.body.name || !req.body.content) {
         res.status(400).json({ error: 'invalid request: no data in POST body'});
         return;
     }
     new Post({
-        userName: req.body.userName,
+        name: req.body.name,
         content: req.body.content,
         likes: [],
         replies: [],
-        replyingTo: null
+        parent: req.body.parent
       }).save((err, result) => {
           if (err) { next(err); }
           res.send(result);
     });
-});
-
-/* POST request for liking a post. */
-router.post('/like', function(req, res, next) {
-
-});
-
-/* POST request for replying to a current post. */
-router.post('/reply', function(req, res, next) {
-
 });
 
 module.exports = router;

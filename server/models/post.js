@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-    userName: {
+    name: {
         type: String,
         required: true
     },
@@ -13,7 +13,7 @@ const PostSchema = new Schema({
     },
     likes: Array,
     replies: Array,
-    replyingTo: {
+    parent: {
         type: String,
         default: null
     }

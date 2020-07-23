@@ -17,15 +17,37 @@ export const PostList = () => {
         }
     }, [postStatus, dispatch])
 
+    const listToTree = list => {
+        let map = {}
+        let node
+        let roots = []
+        let i
+
+        for (i = 0; i < list.length; i++) {
+            map[list[i]._id] = i
+            list[i].replies = []
+        }
+
+        for (i = 0; i < list.length; i++) {
+            node = list[i]
+            if (node.parent !== null) {
+                list[map[node.parent]].replies.push(node)
+            } else {
+                roots.push(node)
+            }
+        }
+        return roots
+    }
+
     let content
 
     if (postStatus === 'loading') {
         content = <div className="loader">Loading...</div>
     } else if (postStatus === 'succeeded') {
-        const sortedPosts = posts.slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        const sortedPosts = listToTree(posts).slice().sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         content = sortedPosts.map(post => (<Post key={post._id} {...post} />))
     } else if (postStatus === 'error') {
-        content = <div>{error}</div>
+        content = <div className="error">{String(error)}</div>
     }
 
     return (

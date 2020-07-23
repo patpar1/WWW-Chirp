@@ -1,23 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IconContext } from "react-icons";
-import { FaHeart, FaReply } from "react-icons/fa";
-
+import { FaReply } from "react-icons/fa";
 import { Media } from "react-bootstrap";
 
-export const Post = ({ userName, content, replies}) => {
+import { PostReplyContainer } from "./PostReplyContainer";
+import avatar from "../avatars/avatar1.png"
+
+export const Post = ({_id, name, content, replies, parent, createdAt}) => {
+    const [replyScreen, setReplyScreen] = useState(false)
+
+    const replyClicked = () => {
+        setReplyScreen(!replyScreen)
+    }
+
     return (
-        <div className="p-3 w-100 shadow-sm mb-4 bg-white rounded">
+        <div className={parent === null ? "p-3 w-100 shadow mb-4 bg-white rounded" : "pl-3 pt-4 w-100"}>
             <Media>
-                <img width={64} height={64} className="mr-3" data-src="holder.js/64x64" alt="64x64"/>
+                <img className="mr-3" width={64} height={64} src={avatar} alt="Avatar" style={{
+                    "verticalAlign": "middle",
+                    "borderRadius": "50%"
+                }} />
                 <Media.Body>
-                    <h5>{userName}</h5>
+                    <h5>{name}</h5>
                     <p className="mb-1">{content}</p>
                     <div>
-                        <IconContext.Provider value={{ className: "mr-4" }}>
-                            <FaHeart />
-                            <FaReply />
+                        <IconContext.Provider value={{ className: "mt-3 mr-4" }}>
+                            <FaReply color={replyScreen ? 'blue' : 'black'} onClick={replyClicked}/>
                         </IconContext.Provider>
+                        <small className="text-muted float-right mt-3 align-bottom">{new Date(createdAt).toLocaleString()}</small>
                     </div>
+                    {replyScreen ? <PostReplyContainer parentID={_id} setReplyState={setReplyScreen}/> : null}
                     {replies && replies.length > 0 
                         ? replies.map(reply => (<Post key={reply._id} {...reply} />))
                         : null}

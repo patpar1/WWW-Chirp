@@ -5,55 +5,83 @@ import { Form, Button } from 'react-bootstrap'
 import { addNewPost } from '../actions/postActions';
 
 export const CreatePost = () => {
+    const [name, setName] = useState('')
     const [content, setContent] = useState('')
-    const [addRequestStatus, setAddrequestStatus] = useState('idle')
+    const [addRequestStatus, setAddRequestStatus] = useState('idle')
+    const [validated, setValidated] = useState(false)
 
     const dispatch = useDispatch()
+
+    const onNameChanged = e => {
+        setName(e.target.value)
+    }
 
     const onContentChanged = e => {
         setContent(e.target.value.substring(0, 180))
     }
 
-    const canSave = content && addRequestStatus === 'idle'
-
-    const onSubmitClicked  = e => {
+    const onSubmitClicked = e => {
         e.preventDefault()
-        if (canSave) {
-            setAddrequestStatus('pending')
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        setValidated(true)
+        if (name && content && addRequestStatus === 'idle') {
+            setAddRequestStatus('pending')
             dispatch(addNewPost({
-                userName: "TODO",
+                name: name,
                 content: content,
                 likes: [],
                 replies: [],
-                replyingTo: null
+                parent: null
             }))
             setContent('')
+            setName('')
+            setAddRequestStatus('idle')
+            setValidated(false)
         }
     }
 
     return (
-        <div className="p-4 pb-2 w-100 shadow-none mb-3 bg-light rounded">
-            <Form>
-                <Form.Control
-                    as="textarea"
-                    rows="3"
-                    placeholder="What's on your mind?"
-                    value={content}
-                    onChange={onContentChanged}
-                />
-                <Button
-                    variant="primary"
-                    type="submit"
-                    className="mb-2 d-inline-block"
-                    onClick={onSubmitClicked}
-                >
-                    Submit
-                </Button>
-                <Form.Text
-                    className="text-muted float-right d-inline-block"
-                >
-                    {180 - content.split("").length}/180 letters
-                </Form.Text>
+        <div className="px-4 pt-4 pb-1 w-100 shadow-none mb-3 bg-light rounded">
+            <Form noValidate validated={validated} onSubmit={onSubmitClicked}>
+                <Form.Group className="mb-3">
+                    <Form.Control
+                        required
+                        type="text"
+                        placeholder="Name"
+                        value={name}
+                        onChange={onNameChanged}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a valid name!
+                    </Form.Control.Feedback>
+                </Form.Group>
+                
+                <Form.Group>
+                    <Form.Control
+                        required
+                        as="textarea"
+                        rows="3"
+                        placeholder="What's on your mind?"
+                        value={content}
+                        onChange={onContentChanged}
+                    />
+                    <Button
+                        variant="primary"
+                        type="submit"
+                        className="mt-3 mb-2 d-inline-block"
+                    >
+                        Submit
+                    </Button>
+                    <Form.Text
+                        className="text-muted float-right d-inline-block"
+                    >
+                        {180 - content.split("").length}/180 letters
+                    </Form.Text>
+                </Form.Group>
             </Form>
         </div>
     )

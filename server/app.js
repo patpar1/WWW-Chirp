@@ -10,10 +10,6 @@ const session = require('express-session');
 // Main router
 const indexRouter = require('./routes');
 
-// Authentication config
-require('./models/User');
-require('./config/passport');
-
 const app = express();
 
 // Set up environment variables
@@ -33,10 +29,6 @@ mongoose.connect(mongoDB, {
 mongoose.Promise = Promise;
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error."));
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 app.use(cors());
 app.use(logger('dev'));
