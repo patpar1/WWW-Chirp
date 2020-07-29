@@ -5,18 +5,24 @@ import { fetchPosts } from '../actions/postActions'
 
 import { Post } from "./Post"
 
+/* Component for storing all Post components */
 export const PostList = () => {
-    const dispatch = useDispatch()
+    // useSelector hooks for getting post information from store
     const posts = useSelector(state => state.posts.posts)
     const postStatus = useSelector(state => state.posts.status)
     const error = useSelector(state => state.posts.error)
 
+    // Dispatch hook
+    const dispatch = useDispatch()
+
+    // useEffect hook for fetching the posts on start
     useEffect(() => {
         if (postStatus === 'idle') {
             dispatch(fetchPosts())
         }
     }, [postStatus, dispatch])
 
+    // Maps all comments to their parent posts
     const listToTree = list => {
         let map = {}
         let node
@@ -41,6 +47,7 @@ export const PostList = () => {
 
     let content
 
+    // Shows the status on the postlist component
     if (postStatus === 'loading') {
         content = <div className="loader">Loading...</div>
     } else if (postStatus === 'succeeded') {

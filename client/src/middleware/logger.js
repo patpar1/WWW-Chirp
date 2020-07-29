@@ -1,3 +1,4 @@
+// Basic logger middleware
 const logger = store => next => action => {
     console.group(action.type)
     console.info('dispatching', action)

@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Form, Button } from 'react-bootstrap';
+import { Col, Form, Button } from 'react-bootstrap';
 
 import { addNewPost } from '../actions/postActions'
 
+/* Smaller ReplyContainer component for replying to a post */
 export const PostReplyContainer = ( { parentID, setReplyState } ) => {
+    // Set react useState hooks for storing component states
     const [name, setName] = useState('')
     const [content, setContent] = useState('')
     const [addRequestStatus, setAddRequestStatus] = useState('idle')
 
+    // Dispatch hook
     const dispatch = useDispatch()
 
+    // Content change functions
     const onNameChanged = e => {
         setName(e.target.value)
     }
@@ -19,12 +23,12 @@ export const PostReplyContainer = ( { parentID, setReplyState } ) => {
         setContent(e.target.value.substring(0, 180))
     }
 
-    const canSave = content && addRequestStatus === 'idle'
-
+    // Submit function
     const onSubmitClicked = e => {
         e.preventDefault()
         setReplyState(false)
-        if (canSave) {
+        // If the form is valid dispatch the new post request
+        if (content && addRequestStatus === 'idle') {
             setAddRequestStatus('pending')
             dispatch(addNewPost({
                 name: name,
@@ -33,36 +37,45 @@ export const PostReplyContainer = ( { parentID, setReplyState } ) => {
                 replies: [],
                 parent: parentID
             }))
+            // Reset states
             setContent('')
             setAddRequestStatus('idle')
         }
     }
 
     return (
-        <div className="mt-3 pl-0">
-            <Form className="d-flex">
-                <Form.Control
-                    className="flex-shrink-1 w-auto mb-0 mr-2"
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={onNameChanged}
-                />
-                <Form.Control
-                    className="flex-grow-1 mb-0"
-                    type="text"
-                    placeholder="Reply"
-                    value={content}
-                    onChange={onContentChanged}
-                />
-                <Button
-                    variant="primary"
-                    type="submit"
-                    className="ml-4"
-                    onClick={onSubmitClicked}
-                >
-                    Submit
-                </Button>
+        <div className="mt-2">
+            <Form>
+                <Form.Row className="d-flex">
+                    <Col xs="auto">
+                        <Form.Control
+                            className="mt-2"
+                            type="text"
+                            placeholder="Name"
+                            value={name}
+                            onChange={onNameChanged}
+                        />
+                    </Col>
+                    <Col xs="auto" className="flex-grow-1">
+                        <Form.Control
+                            className="mt-2"
+                            type="text"
+                            placeholder="Reply"
+                            value={content}
+                            onChange={onContentChanged}
+                        />
+                    </Col>
+                    <Col xs="auto">
+                        <Button
+                            className="mt-2 float-right text-center"
+                            variant="primary"
+                            type="submit"
+                            onClick={onSubmitClicked}
+                        >
+                            Submit
+                        </Button>
+                    </Col>
+                </Form.Row>
             </Form>
         </div>
     )

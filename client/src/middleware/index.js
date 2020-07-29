@@ -4,7 +4,8 @@ import thunk from 'redux-thunk';
 import logger from './logger';
 import rootReducer from '../reducers'
 
-export default function configureStore(preloadedState) {
+// Create a store and configure it with the middleware
+export default function configureStore(preloadedState = {}) {
     const middleware = [thunk, logger];
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

@@ -6,28 +6,28 @@ import { Media } from "react-bootstrap";
 import { PostReplyContainer } from "./PostReplyContainer";
 import avatar from "../avatars/avatar1.png"
 
+/* Post instance component */
 export const Post = ({_id, name, content, replies, parent, createdAt}) => {
+    // Set react useState hooks for storing component states
     const [replyScreen, setReplyScreen] = useState(false)
 
+    // Click listener for reply button
     const replyClicked = () => {
         setReplyScreen(!replyScreen)
     }
 
     return (
-        <div className={parent === null ? "p-3 w-100 shadow mb-4 bg-white rounded" : "pl-3 pt-4 w-100"}>
+        <div className={parent === null ? "post shadow rounded" : "post_child"}>
             <Media>
-                <img className="mr-3" width={64} height={64} src={avatar} alt="Avatar" style={{
-                    "verticalAlign": "middle",
-                    "borderRadius": "50%"
-                }} />
+                <img className="profile_pic" src={avatar} alt="Avatar" />
                 <Media.Body>
                     <h5>{name}</h5>
-                    <p className="mb-1">{content}</p>
+                    <p className="post_content">{content}</p>
                     <div>
-                        <IconContext.Provider value={{ className: "mt-3 mr-4" }}>
+                        <IconContext.Provider value={{ className: "icon" }}>
                             <FaReply color={replyScreen ? 'blue' : 'black'} onClick={replyClicked}/>
                         </IconContext.Provider>
-                        <small className="text-muted float-right mt-3 align-bottom">{new Date(createdAt).toLocaleString()}</small>
+                        <small className="date text-muted float-right align-bottom">{new Date(createdAt).toLocaleString()}</small>
                     </div>
                     {replyScreen ? <PostReplyContainer parentID={_id} setReplyState={setReplyScreen}/> : null}
                     {replies && replies.length > 0 

@@ -5,14 +5,16 @@ import {
   FETCH_ERROR
 } from '../actions/types';
 
+// Initial state for the post store
 const initialState = {
   posts: [],
   status: 'idle',
   error: null
 }
 
-export default function(state = initialState, action) {
-  switch (action.type) {
+// Reducer
+export default function(state = initialState, { type, payload }) {
+  switch (type) {
     case FETCHING_POSTS:
       return {
         ...state,
@@ -22,18 +24,18 @@ export default function(state = initialState, action) {
       return {
         ...state,
         status: 'succeeded',
-        posts: [...state.posts, ...action.payload]
+        posts: [...state.posts, ...payload]
       }
     case FETCH_ERROR:
       return {
         ...state,
         status: 'error',
-        error: action.payload
+        error: payload
       }
     case ADD_NEW_POST:
       return {
         ...state,
-        posts: [...state.posts, action.payload]
+        posts: [...state.posts, payload]
       }
     default:
       return state;
