@@ -35,6 +35,7 @@ export default function(state = initialState, { type, payload }) {
     case ADD_NEW_POST:
       return {
         ...state,
+        status: 'succeeded',
         posts: [...state.posts, payload]
       }
     default:
